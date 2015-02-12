@@ -62,7 +62,7 @@ public class BitStreamRead {
 	public int ReadU16() {
 		short low = ReadU8();
 		short high = ReadU8();
-		return (int) (((int) low) | (((int) high) << 8));
+		return ((int) low) | (((int) high) << 8);
 	}
 
 	public long ReadU32() {
@@ -276,7 +276,7 @@ public class BitStreamRead {
 	 * returns the number of bits read in rCount
 	 */
 	private long GetBitCount() {
-		return (long) ((this.dataPosition << 5) + this.dataBitOffset);
+		return (this.dataPosition << 5) + this.dataBitOffset;
 	}
 
 	/* ReadBit

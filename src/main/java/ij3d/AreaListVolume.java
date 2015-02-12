@@ -75,7 +75,7 @@ public class AreaListVolume extends Volume {
 		if (list == null) return 0;
 		for (final Area area : list) {
 			if (area.contains(x, y)) return 0xff;
-		};
+		}
 		return 0;
 	}
 

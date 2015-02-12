@@ -91,7 +91,7 @@ public class Install_J3D implements PlugIn {
 			return null;
 		}
 		VirtualUniverse univ = new VirtualUniverse();
-		return (String)univ.getProperties().
+		return (String) VirtualUniverse.getProperties().
 				get("j3d.specification.version");
 	}
 
@@ -209,7 +209,7 @@ public class Install_J3D implements PlugIn {
 		if(files.size() == 0)
 			throw new Exception("Could not find j3d-jre.zip in "
 				+ downloaded);
-		File j3djre = (File)files.get(0);
+		File j3djre = files.get(0);
 
 		/*
 		 * if not on a Mac, the j3djre zip file can just be extracted

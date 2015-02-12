@@ -35,9 +35,9 @@ public class CubeData implements AxisConstants {
 		this.cube = c;
 		readCalibration(c.dir + c.name + ".info", cal);
 
-		min[0] = (float)(c.x * c.octree.pw);
-		min[1] = (float)(c.y * c.octree.ph);
-		min[2] = (float)(c.z * c.octree.pd);
+		min[0] = c.x * c.octree.pw;
+		min[1] = c.y * c.octree.ph;
+		min[2] = c.z * c.octree.pd;
 
 		max[0] = min[0] + SIZE * cal[0];
 		max[1] = min[1] + SIZE * cal[1];
@@ -48,16 +48,16 @@ public class CubeData implements AxisConstants {
 		float zTexGenScale = (float)(1.0 / (cal[2] * SIZE));
 
 		tgz = new TexCoordGeneration();
-		tgz.setPlaneS(new Vector4f(xTexGenScale, 0f, 0f, -(float)(xTexGenScale * min[0])));
-		tgz.setPlaneT(new Vector4f(0f, yTexGenScale, 0f, -(float)(yTexGenScale * min[1])));
+		tgz.setPlaneS(new Vector4f(xTexGenScale, 0f, 0f, -(xTexGenScale * min[0])));
+		tgz.setPlaneT(new Vector4f(0f, yTexGenScale, 0f, -(yTexGenScale * min[1])));
 
 		tgx = new TexCoordGeneration();
-		tgx.setPlaneS(new Vector4f(0f, yTexGenScale, 0f, -(float)(yTexGenScale * min[1])));
-		tgx.setPlaneT(new Vector4f(0f, 0f, zTexGenScale, -(float)(zTexGenScale * min[2])));
+		tgx.setPlaneS(new Vector4f(0f, yTexGenScale, 0f, -(yTexGenScale * min[1])));
+		tgx.setPlaneT(new Vector4f(0f, 0f, zTexGenScale, -(zTexGenScale * min[2])));
 
 		tgy = new TexCoordGeneration();
-		tgy.setPlaneS(new Vector4f(xTexGenScale, 0f, 0f, -(float)(xTexGenScale * min[0])));
-		tgy.setPlaneT(new Vector4f(0f, 0f, zTexGenScale, -(float)(zTexGenScale * min[2])));
+		tgy.setPlaneS(new Vector4f(xTexGenScale, 0f, 0f, -(xTexGenScale * min[0])));
+		tgy.setPlaneT(new Vector4f(0f, 0f, zTexGenScale, -(zTexGenScale * min[2])));
 
 		shapes = new ShapeGroup[SIZE];
 		for(int i = 0; i < SIZE; i++)

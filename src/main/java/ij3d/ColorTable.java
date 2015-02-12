@@ -249,9 +249,9 @@ public class ColorTable {
 			byte[] newB = new byte[w * h];
 			for(int i = 0; i < w*h; i++) {
 				int index = bytes[i] & 0xff;
-				int value = (weight[0] * (int)(r[index]&0xff) +
-					weight[1] * (int)(g[index]&0xff) +
-					weight[2] * (int)(b[index]&0xff));
+				int value = (weight[0] * (r[index]&0xff) +
+					weight[1] * (g[index]&0xff) +
+					weight[2] * (b[index]&0xff));
 				newB[i] = (byte)(value/sum);
 
 			}

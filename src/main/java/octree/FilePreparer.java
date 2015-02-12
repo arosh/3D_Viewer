@@ -38,7 +38,7 @@ public class FilePreparer {
 				return 0;
 			long i = z * wh + y * w + x;
 			ra.seek(i);
-			return (int)(0xff & ra.readByte());
+			return 0xff & ra.readByte();
 		}
 
 		final void createBlock(int x, int y, int z, String dir, String file, int size) throws IOException {
@@ -146,7 +146,7 @@ public class FilePreparer {
 								int iy = y + j;
 								for(int i = 0; i < fx; i++) {
 									int ix = x + i;
-									accu.add((int)(0xff & cache[k * fy + j][ix]));
+									accu.add(0xff & cache[k * fy + j][ix]);
 								}
 							}
 						}

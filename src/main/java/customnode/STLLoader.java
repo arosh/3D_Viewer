@@ -76,8 +76,8 @@ public class STLLoader {
 		// that contains the number of triangles
 		byte[] buffer = new byte[84];
 		fs.read(buffer, 0, 84);
-		triangles = (int) (((buffer[83] & 0xff) << 24)
-				| ((buffer[82] & 0xff) << 16) | ((buffer[81] & 0xff) << 8) | (buffer[80] & 0xff));
+		triangles = ((buffer[83] & 0xff) << 24)
+				| ((buffer[82] & 0xff) << 16) | ((buffer[81] & 0xff) << 8) | (buffer[80] & 0xff);
 		if (((f.length() - 84) / 50) == triangles) {
 			IJ.log("Looks like a binary STL");
 			parseBinary(f);

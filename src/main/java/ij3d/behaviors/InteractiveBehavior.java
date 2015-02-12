@@ -107,7 +107,7 @@ public class InteractiveBehavior extends Behavior {
 		*/
 		while(criteria.hasMoreElements()) {
 			WakeupOnAWTEvent wakeup = (WakeupOnAWTEvent)criteria.nextElement();
-			AWTEvent[] events = (AWTEvent[])wakeup.getAWTEvent();
+			AWTEvent[] events = wakeup.getAWTEvent();
 			for(AWTEvent evt : events) {
 				if(evt instanceof MouseEvent)
 					doProcess((MouseEvent)evt);

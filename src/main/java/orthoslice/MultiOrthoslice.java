@@ -48,7 +48,7 @@ public class MultiOrthoslice extends VolumeRenderer {
 		for(int i = 0; i < 3; i++) {
 			// by default, show only the middle slice
 			slices[i] = new boolean[dimensions[i]];
-			slices[i][dimensions[i] / 2] = true;;
+			slices[i][dimensions[i] / 2] = true;
 			whichChild.set(i, true);
 			whichChild.set(i + 3, true);
 		}

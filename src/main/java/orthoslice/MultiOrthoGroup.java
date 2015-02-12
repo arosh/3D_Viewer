@@ -97,6 +97,6 @@ public class MultiOrthoGroup extends VoltexGroup {
 	 */
 	@Override
 	public void eyePtChanged(View view) {
-		((MultiOrthoslice)renderer).eyePtChanged(view);
+		renderer.eyePtChanged(view);
 	}
 }

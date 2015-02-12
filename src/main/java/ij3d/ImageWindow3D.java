@@ -243,9 +243,9 @@ public class ImageWindow3D extends JFrame implements UniverseListener {
 		try {
 			Method m = SimpleUniverse.class.getMethod(
 					"removeRenderingErrorListener",
-					new Class[]{RenderingErrorListener.class});
+					RenderingErrorListener.class);
 			if (null != m)
-				m.invoke(universe, new Object[]{error_listener});
+				m.invoke(universe, error_listener);
 		} catch (Exception ex) {
 			System.out.println(
 					"Could NOT remove the RenderingErrorListener!");

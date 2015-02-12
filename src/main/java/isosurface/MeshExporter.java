@@ -206,7 +206,7 @@ public class MeshExporter {
 		// get all the meshes and sort them into a hash
 		HashMap<String, CustomMesh> meshes = new HashMap<String, CustomMesh>();
 		for (Iterator<Content> it = meshgroups.iterator(); it.hasNext();) {
-			Content mob = (Content) it.next();
+			Content mob = it.next();
 
 			ContentNode node = mob.getContent();
 			// First CustomMultiMesh, which is also a CustomMeshNode:
@@ -310,7 +310,7 @@ public class MeshExporter {
 			// get all the meshes and sort them into a hash
 			HashMap<String, CustomMesh> meshes = new HashMap<String, CustomMesh>();
 			for (Iterator<Content> it = meshgroups.iterator(); it.hasNext();) {
-				Content mob = (Content) it.next();
+				Content mob = it.next();
 
 				ContentNode node = mob.getContent();
 				// First CustomMultiMesh, which is also a CustomMeshNode:
