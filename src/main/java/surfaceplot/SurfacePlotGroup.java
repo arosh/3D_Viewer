@@ -72,9 +72,9 @@ public class SurfacePlotGroup extends ContentNode implements AdjustmentListener{
 		StackWindow win = (StackWindow)c.getImage().getWindow();
 		if(win == null)
 			return;
-		for (Component c : win.getComponents()) {
-			if (c instanceof Scrollbar) {
-				((Scrollbar) c).addAdjustmentListener(this);
+		for (Component co : win.getComponents()) {
+			if (co instanceof Scrollbar) {
+				((Scrollbar) co).addAdjustmentListener(this);
 			}
 		}
 	}

@@ -358,6 +358,6 @@ public class ImageJ3DViewer implements PlugIn {
 	}
 
 	private static boolean getBoolean(String s) {
-		return new Boolean(s);
+		return Boolean.valueOf(s);
 	}
 }

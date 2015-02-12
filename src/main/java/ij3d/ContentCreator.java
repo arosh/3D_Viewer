@@ -172,7 +172,7 @@ public class ContentCreator {
 		ArrayList<ImagePlus> images = new ArrayList<ImagePlus>();
 		for(ImagePlus frame : FileIterator.getIterable(file))
 			images.add(frame);
-		return images.toArray(new ImagePlus[] {});
+		return images.toArray(new ImagePlus[images.size()]);
 	}
 
 	public static void convert(ImagePlus image) {

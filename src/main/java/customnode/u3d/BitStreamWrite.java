@@ -343,9 +343,7 @@ public class BitStreamWrite {
 		if (null != this.data) {
 			long[] oldData = this.data;
 			this.data = new long[size];
-			for (int i = 0; i < oldData.length; i++) {
-				this.data[i] = oldData[i];
-			}
+			System.arraycopy(oldData, 0, this.data, 0, oldData.length);
 		} else {
 			this.data = new long[size];
 		}

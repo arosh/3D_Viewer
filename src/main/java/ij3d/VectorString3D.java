@@ -68,7 +68,7 @@ class VectorString3D {
 		} else {
 			// resize and append
 			double[][] dep2 = new double[dep.length + 1][];
-			for (int i=0; i<dep.length; i++) dep2[i] = dep[i];
+			System.arraycopy(dep, 0, dep2, 0, dep.length);
 			dep2[dep.length] = a;
 			dep = dep2;
 		}

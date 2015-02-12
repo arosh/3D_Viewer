@@ -252,8 +252,7 @@ public class Cube implements AxisConstants, Comparable<Cube> {
 				break;
 			}
 		}
-		if(found) return true;
-		return false;
+		return found;
 	}
 
 	public int compareTo(Cube other) {

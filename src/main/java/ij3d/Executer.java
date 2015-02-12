@@ -237,7 +237,7 @@ public class Executer {
 			IJ.showMessage("Must select a " + formatDescription + " file!");
 			return;
 		}
-		String path = new StringBuilder(od.getDirectory()).append(filename).toString();
+		String path = od.getDirectory() + filename;
 		IJ.log("path: " + path);
 		Object ob;
 		try {
@@ -491,7 +491,6 @@ public class Executer {
 			}
 		} catch(Exception e) {
 			IJ.error("Cannot parse " + rangeString);
-			return;
 		}
 	}
 
@@ -563,13 +562,11 @@ public class Executer {
 					os.setVisible(VolumeRenderer.Y_AXIS, vis2);
 					os.setVisible(VolumeRenderer.Z_AXIS, vis3);
 					univ.fireContentChanged(c);
-					return;
 				} else {
 					record(SET_SLICES,
 					Integer.toString(sl[0].getValue()),
 					Integer.toString(sl[1].getValue()),
 					Integer.toString(sl[2].getValue()));
-					return;
 				}
 			}
 		});
@@ -1186,7 +1183,6 @@ public class Executer {
 			public void windowClosed(WindowEvent e) {
 				if(gd.wasCanceled()) {
 					c.setLandmarkPointSize(oldS);
-					return;
 				}
 			}
 		});

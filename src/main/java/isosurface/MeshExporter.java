@@ -227,7 +227,6 @@ public class MeshExporter {
 			} else {
 				IJ.log("Ignoring " + mob.getName() + " with node of class "
 						+ node.getClass());
-				continue;
 			}
 		}
 		//count all the triangles and add them to a list
@@ -331,7 +330,6 @@ public class MeshExporter {
 				} else {
 					IJ.log("Ignoring " + mob.getName() + " with node of class "
 							+ node.getClass());
-					continue;
 				}
 			}
 
@@ -485,7 +483,6 @@ public class MeshExporter {
 				meshes.put(mob.getName(), ((MeshGroup)node).getMesh());
 			} else {
 				IJ.log("Ignoring " + mob.getName() + " with node of class " + node.getClass());
-				continue;
 			}
 		}
 		WavefrontExporter.save(meshes, mtl_filename, w_obj, w_mtl);

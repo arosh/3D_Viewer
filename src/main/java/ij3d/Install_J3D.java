@@ -90,7 +90,6 @@ public class Install_J3D implements PlugIn {
 		} catch(ClassNotFoundException e) {
 			return null;
 		}
-		VirtualUniverse univ = new VirtualUniverse();
 		return (String) VirtualUniverse.getProperties().
 				get("j3d.specification.version");
 	}
@@ -147,9 +146,7 @@ public class Install_J3D implements PlugIn {
 	 */
 	public static boolean isPPC() {
 		String arch = System.getProperty("os.arch");
-		if(arch.startsWith("ppc"))
-			return true;
-		return false;
+		return arch.startsWith("ppc");
 	}
 
 	/**
