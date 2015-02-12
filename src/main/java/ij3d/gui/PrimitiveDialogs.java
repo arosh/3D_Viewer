@@ -271,8 +271,7 @@ public class PrimitiveDialogs {
 			if(tfs.size() < 2)
 				return null;
 			List<Point3f> pts = new ArrayList<Point3f>();
-			for(int i = 0; i < tfs.size(); i++)
-				pts.add(parsePoint(tfs.get(i).getText()));
+			for (TextField tf : tfs) pts.add(parsePoint(tf.getText()));
 			return new Tube(pts, radius);
 
 //			Point3f first = parsePoint(tfs.get(0).getText());

@@ -210,8 +210,7 @@ public final class MCCube {
 		}
 
 		// convert pixel coordinates
-		for(int i = 0; i < tri.size(); i++) {
-			Point3f p = tri.get(i);
+		for (Point3f p : tri) {
 			p.x = (float) (p.x * volume.pw + volume.minCoord.x);
 			p.y = (float) (p.y * volume.ph + volume.minCoord.y);
 			p.z = (float) (p.z * volume.pd + volume.minCoord.z);
@@ -303,8 +302,7 @@ public final class MCCube {
 		}
 
 		// convert pixel coordinates
-		for (int i = 0; i < tri.size(); i++) {
-			Point3f p = tri.get(i);
+		for (Point3f p : tri) {
 			p.x = (float) (p.x * volume.pw + volume.minCoord.x);
 			p.y = (float) (p.y * volume.ph + volume.minCoord.y);
 			p.z = (float) (p.z * volume.pd + volume.minCoord.z);

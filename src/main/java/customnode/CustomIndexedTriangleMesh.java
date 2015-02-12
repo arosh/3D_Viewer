@@ -176,9 +176,9 @@ public class CustomIndexedTriangleMesh extends CustomMesh {
 	public void setCoordinates(int[] indices, Point3f p) {
 		changed = true;
 		GeometryArray ga = (GeometryArray)getGeometry();
-		for(int i = 0; i < indices.length; i++) {
-			ga.setCoordinate(indices[i], p);
-			vertices[indices[i]].set(p);
+		for (int index : indices) {
+			ga.setCoordinate(index, p);
+			vertices[index].set(p);
 		}
 	}
 

@@ -200,8 +200,7 @@ public class TimelineGUI implements ActionListener, KeyListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		for(int i = 0; i < buttons.length; i++)
-			buttons[i].repaint();
+		for (JButton button : buttons) button.repaint();
 
 		String command = e.getActionCommand();
 

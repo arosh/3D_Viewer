@@ -157,17 +157,17 @@ public final class SurfacePlot extends Shape3D {
 	 * @param color
 	 */
 	public void setColor(Color3f color) {
-		for(int g = 0; g < geometry.length; g++) {
-			int N = geometry[g].getVertexCount();
+		for (IndexedQuadArray g : geometry) {
+			int N = g.getVertexCount();
 			Color3f colors[] = new Color3f[N];
 			Point3f coord = new Point3f();
-			for(int i = 0; i < N; i++) {
-				geometry[g].getCoordinate(i, coord);
+			for (int i = 0; i < N; i++) {
+				g.getCoordinate(i, coord);
 				colors[i] = color != null ? color
-					: new Color3f(Color.getHSBColor(
+						: new Color3f(Color.getHSBColor(
 						coord.z / maxZ, 1, 1));
 			}
-			geometry[g].setColors(0, colors);
+			g.setColors(0, colors);
 		}
 	}
 

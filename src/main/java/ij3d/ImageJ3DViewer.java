@@ -41,7 +41,7 @@ public class ImageJ3DViewer implements PlugIn {
 				univ.getExecuter().addContent(image, null);
 
 		} catch(Exception e) {
-			StringBuffer buf = new StringBuffer();
+			StringBuilder buf = new StringBuilder();
 			StackTraceElement[] st = e.getStackTrace();
 			buf.append("An unexpected exception occurred. \n" +
 				"Please mail me the following lines if you \n"+
@@ -226,9 +226,9 @@ public class ImageJ3DViewer implements PlugIn {
 
 	public static void setChannels(String red, String green, String blue) {
 		Image3DUniverse univ = getUniv();
-		boolean r = Boolean.valueOf(red).booleanValue();
-		boolean g = Boolean.valueOf(green).booleanValue();
-		boolean b = Boolean.valueOf(blue).booleanValue();
+		boolean r = Boolean.valueOf(red);
+		boolean g = Boolean.valueOf(green);
+		boolean b = Boolean.valueOf(blue);
 		if(univ != null && univ.getSelected() != null) {
 			univ.getSelected().setChannels(new boolean[]{r, g, b});
 		}
@@ -358,6 +358,6 @@ public class ImageJ3DViewer implements PlugIn {
 	}
 
 	private static boolean getBoolean(String s) {
-		return new Boolean(s).booleanValue();
+		return new Boolean(s);
 	}
 }

@@ -416,7 +416,7 @@ public class MeshExporter {
 		final Point3f[] vert = new Point3f[len];
 		triangles.toArray(vert);
 
-		final StringBuffer sb = new StringBuffer(150);
+		final StringBuilder sb = new StringBuilder(150);
 
 		for (int i=0; i<len; i+=3) {
 

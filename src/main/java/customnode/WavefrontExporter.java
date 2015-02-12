@@ -82,7 +82,7 @@ public class WavefrontExporter {
 		// object. Starting at '1' because vert indices start at one.
 		int j = 1; 
 
-		final StringBuffer tmp = new StringBuffer(100);
+		final StringBuilder tmp = new StringBuilder(100);
 
 		for(String name : meshes.keySet()) {
 			CustomMesh cmesh = meshes.get(name);
@@ -182,7 +182,7 @@ public class WavefrontExporter {
 		if(indices.length % 3 != 0)
 			throw new IllegalArgumentException(
 				"list of triangles not multiple of 3: " + name);
-		final StringBuffer buf = new StringBuffer(100);
+		final StringBuilder buf = new StringBuilder(100);
 		objWriter.write("s 1\n");
 		for (int i = 0; i < indices.length; i += 3) {
 			buf.append('f').append(' ')
@@ -200,11 +200,10 @@ public class WavefrontExporter {
 	 */
 	static void writePointFaces(int[] indices, Writer objWriter, String name)
 						throws IOException {
-		final StringBuffer buf = new StringBuffer(100);
+		final StringBuilder buf = new StringBuilder(100);
 		objWriter.write("s 1\n");
-		for (int i = 0; i < indices.length; i++) {
-			buf.append('f').append(' ')
-				.append(indices[i]).append('\n');
+		for (int index : indices) {
+			buf.append('f').append(' ').append(index).append('\n');
 			objWriter.write(buf.toString());
 			buf.setLength(0);
 		}
@@ -219,7 +218,7 @@ public class WavefrontExporter {
 		if(indices.length % 4 != 0)
 			throw new IllegalArgumentException(
 				"list of quads not multiple of 4: " + name);
-		final StringBuffer buf = new StringBuffer(100);
+		final StringBuilder buf = new StringBuilder(100);
 		objWriter.write("s 1\n");
 		for (int i = 0; i < indices.length; i += 4) {
 			buf.append('f').append(' ')
@@ -243,7 +242,7 @@ public class WavefrontExporter {
 		if(indices.length % 2 != 0)
 			throw new IllegalArgumentException(
 				"list of lines not multiple of 2: " + name);
-		final StringBuffer buf = new StringBuffer(100);
+		final StringBuilder buf = new StringBuilder(100);
 		objWriter.write("s 1\n");
 		for (int i = 0; i < indices.length; i += 2) {
 			buf.append('f').append(' ')
@@ -261,7 +260,7 @@ public class WavefrontExporter {
 	 */
 	static void writeContinuousLineFaces(int[] indices, Writer objWriter, String name)
 						throws IOException {
-		final StringBuffer buf = new StringBuffer(100);
+		final StringBuilder buf = new StringBuilder(100);
 		objWriter.write("s 1\n");
 		for (int i = 0; i < indices.length - 1; i++) {
 			buf.append('f').append(' ')

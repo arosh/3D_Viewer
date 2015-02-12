@@ -112,14 +112,13 @@ public abstract class CustomMesh extends Shape3D {
 
 		min.x = min.y = min.z = Float.MAX_VALUE;
 		max.x = max.y = max.z = Float.MIN_VALUE;
-		for(int i = 0; i < mesh.size(); i++) {
-			Point3f p = mesh.get(i);
-			if(p.x < min.x) min.x = p.x;
-			if(p.y < min.y) min.y = p.y;
-			if(p.z < min.z) min.z = p.z;
-			if(p.x > max.x) max.x = p.x;
-			if(p.y > max.y) max.y = p.y;
-			if(p.z > max.z) max.z = p.z;
+		for (Point3f p : mesh) {
+			if (p.x < min.x) min.x = p.x;
+			if (p.y < min.y) min.y = p.y;
+			if (p.z < min.z) min.z = p.z;
+			if (p.x > max.x) max.x = p.x;
+			if (p.y > max.y) max.y = p.y;
+			if (p.z > max.z) max.z = p.z;
 		}
 		center.x = (max.x + min.x) / 2;
 		center.y = (max.y + min.y) / 2;
@@ -206,9 +205,9 @@ public abstract class CustomMesh extends Shape3D {
 	public void setCoordinates(int[] indices, Point3f p) {
 		changed = true;
 		GeometryArray ga = (GeometryArray)getGeometry();
-		for(int i = 0; i < indices.length; i++) {
-			ga.setCoordinate(indices[i], p);
-			mesh.get(indices[i]).set(p);
+		for (int index : indices) {
+			ga.setCoordinate(index, p);
+			mesh.get(index).set(p);
 		}
 	}
 

@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.vecmath.Point3f;
@@ -48,8 +47,8 @@ public class MeshEditor {
 			pg.applyVector(ht);
 		}
 		*/
-		for (Iterator it = ht.values().iterator(); it.hasNext(); ) {
-			PointGroup pg = (PointGroup)it.next();
+		for (Object o : ht.values()) {
+			PointGroup pg = (PointGroup) o;
 			pg.smoothMembers(K);
 		}
 
@@ -79,8 +78,8 @@ public class MeshEditor {
 			vx = 0;
 			vy = 0;
 			vz = 0;
-			for (Iterator it = edges.iterator(); it.hasNext(); ) {
-				Point3f po = (Point3f)it.next();
+			for (Object edge : edges) {
+				Point3f po = (Point3f) edge;
 				vx += po.x;
 				vy += po.y;
 				vz += po.z;
@@ -89,8 +88,8 @@ public class MeshEditor {
 			vx = (vx/size - first.x) * K;
 			vy = (vy/size - first.y) * K;
 			vz = (vz/size - first.z) * K;
-			for (Iterator it = members.iterator(); it.hasNext(); ) {
-				Point3f m = (Point3f)it.next();
+			for (Object member : members) {
+				Point3f m = (Point3f) member;
 				m.x += vx;
 				m.y += vy;
 				m.z += vz;
@@ -101,8 +100,8 @@ public class MeshEditor {
 			vx = 0;
 			vy = 0;
 			vz = 0;
-			for (Iterator it = edges.iterator(); it.hasNext(); ) {
-				Point3f po = (Point3f)it.next();
+			for (Object edge : edges) {
+				Point3f po = (Point3f) edge;
 				vx += po.x;
 				vy += po.y;
 				vz += po.z;
@@ -116,8 +115,8 @@ public class MeshEditor {
 			// compute average displacement vector for all neighbors, i.e. edge points
 			float ax=0, ay=0, az=0;
 			int count = 0;
-			for (Iterator it = edges.iterator(); it.hasNext(); ) {
-				PointGroup pg = (PointGroup)ht.get(it.next());
+			for (Object edge : edges) {
+				PointGroup pg = (PointGroup) ht.get(edge);
 				if (null == pg) continue;
 				count++;
 				ax += pg.vx;
@@ -132,8 +131,8 @@ public class MeshEditor {
 			ay /= count;
 			az /= count;
 			// apply to each member the smoothing vector minus average neighborhood smoothing vector to avoid shrinking
-			for (Iterator it = members.iterator(); it.hasNext(); ) {
-				Point3f m = (Point3f)it.next();
+			for (Object member : members) {
+				Point3f m = (Point3f) member;
 				m.x += vx;// - ax;
 				m.y += vy;// - ay;
 				m.z += vz;// - az;

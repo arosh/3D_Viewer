@@ -203,8 +203,7 @@ public class U3DExporter {
 	}
 
 	private static void WriteMatrix(BitStreamWrite w, float[] mat) {
-		for(int i = 0; i < mat.length; i++)
-			w.WriteF32(mat[i]);
+		for (float m : mat) w.WriteF32(m);
 	}
 
 	private static DataBlock getModelNodeBlock(String modelNodeName, String modelResourceName, float[] matrix) {
@@ -492,15 +491,15 @@ w.WriteU32(0);
 		w.WriteU32(0);                        // base texture coord count
 
 
-		for(int i = 0; i < coords.length; i++) {
-			w.WriteF32(coords[i].x);      // base position x
-			w.WriteF32(coords[i].y);      // base position y
-			w.WriteF32(coords[i].z);      // base position z
+		for (Point3f coord : coords) {
+			w.WriteF32(coord.x);      // base position x
+			w.WriteF32(coord.y);      // base position y
+			w.WriteF32(coord.z);      // base position z
 		}
-		for(int i = 0; i < normals.length; i++) {
-			w.WriteF32(normals[i].x);     // base normal x
-			w.WriteF32(normals[i].y);     // base normal y
-			w.WriteF32(normals[i].z);     // base normal z
+		for (Vector3f normal : normals) {
+			w.WriteF32(normal.x);     // base normal x
+			w.WriteF32(normal.y);     // base normal y
+			w.WriteF32(normal.z);     // base normal z
 		}
 /*
 		for(int i = 0; i < colors.length; i++) {

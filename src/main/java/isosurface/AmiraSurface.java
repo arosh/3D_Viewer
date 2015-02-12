@@ -101,14 +101,12 @@ public class AmiraSurface implements PlugIn {
 		}
 
 		Color3f lightGray = new Color3f(.5f, .5f, .5f);
-		Iterator iter = meshes.keySet().iterator();
-		while (iter.hasNext()) {
-			String name = (String)iter.next();
+		for (Object o : meshes.keySet()) {
+			String name = (String) o;
 			int m = params.getMaterialID(name);
 			double[] c = params.getMaterialColor(m);
-			Color3f color = (c[0] == 0 && c[1] == 0 && c[2] == 0 ?
-					lightGray : new Color3f((float)c[0],
-						(float)c[1], (float)c[2]));
+			Color3f color = (c[0] == 0 && c[1] == 0 && c[2] == 0) ?
+					lightGray : new Color3f((float)c[0], (float)c[1], (float)c[2]);
 			List list = (List)meshes.get(name);
 			if (list.size() == 0)
 				continue;

@@ -1359,8 +1359,7 @@ public class Image3DUniverse extends DefaultAnimatableUniverse {
 	public void removeAllContents() {
 		  String[] names = new String[contents.size()];
 		  contents.keySet().toArray(names);
-		  for (int i=0; i<names.length; i++)
-			    removeContent(names[i]);
+		  for (String name : names) removeContent(name);
 	}
 
 	/**
@@ -1645,7 +1644,7 @@ public class Image3DUniverse extends DefaultAnimatableUniverse {
 	}
 
 	public String allContentsString() {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		boolean first = true;
 		for(String s : contents.keySet()) {
 			if(first)

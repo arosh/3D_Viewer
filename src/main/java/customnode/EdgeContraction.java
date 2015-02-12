@@ -44,16 +44,14 @@ public class EdgeContraction {
 			curr = getRemainingVertexCount();
 		}
 		int v = 0;
-		for(int i = 0; i < mesh.size(); i++)
-			v += mesh.get(i).getVertexCount();
+		for (FullInfoMesh m : mesh) v += m.getVertexCount();
 
 		return v;
 	}
 
 	public int getRemainingVertexCount() {
 		int v = 0;
-		for(int i = 0; i < mesh.size(); i++)
-			v += mesh.get(i).getVertexCount();
+		for (FullInfoMesh m : mesh) v += m.getVertexCount();
 
 		return v;
 	}

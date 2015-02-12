@@ -57,8 +57,7 @@ public class BitStreamWrite {
 			e.printStackTrace();
 			return;
 		}
-		for (int i = 0; i < bytes.length; i++)
-			WriteU8(bytes[i]);
+		for (byte b : bytes) WriteU8(b);
 	}
 	
 	
