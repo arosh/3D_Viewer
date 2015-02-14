@@ -1,43 +1,45 @@
 package ij3d;
 
-import customnode.CustomMesh;
-import customnode.CustomMeshNode;
+import ij3d.shapes.CoordinateSystem;
+import ij3d.shapes.BoundingBox;
+import ij3d.pointlist.PointListPanel;
+import ij3d.pointlist.PointListShape;
+import ij3d.pointlist.PointListDialog;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.io.FileInfo;
 import ij.io.OpenDialog;
 import ij.process.ImageProcessor;
-import ij3d.pointlist.PointListDialog;
-import ij3d.pointlist.PointListPanel;
-import ij3d.pointlist.PointListShape;
-import ij3d.shapes.BoundingBox;
-import ij3d.shapes.CoordinateSystem;
+
+import customnode.CustomMeshNode;
+import customnode.CustomMesh;
+
+import vib.InterpolatedImage;
+import vib.PointList;
+import vib.FastMatrix;
 import isosurface.MeshGroup;
+import voltex.VoltexGroup;
+import orthoslice.OrthoGroup;
+import orthoslice.MultiOrthoGroup;
+import surfaceplot.SurfacePlotGroup;
+
+import java.util.BitSet;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.Enumeration;
 
 import javax.media.j3d.BranchGroup;
-import javax.media.j3d.OrderedGroup;
 import javax.media.j3d.Switch;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.media.j3d.View;
+
 import javax.vecmath.Color3f;
 import javax.vecmath.Matrix3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
-
-import orthoslice.MultiOrthoGroup;
-import orthoslice.OrthoGroup;
-import surfaceplot.SurfacePlotGroup;
-import vib.FastMatrix;
-import vib.InterpolatedImage;
-import vib.PointList;
-import voltex.VoltexGroup;
 
 public class ContentInstant extends BranchGroup implements UniverseListener, ContentConstants {
 
@@ -78,7 +80,8 @@ public class ContentInstant extends BranchGroup implements UniverseListener, Con
 	private PointList points;
 
 	// scene graph entries
-	private OrderedGroup ordered;
+	private Switch bbSwitch;
+	private BitSet whichChild = new BitSet(5);
 
 	protected TransformGroup localRotate;
 	protected TransformGroup localTranslate;
@@ -101,22 +104,18 @@ public class ContentInstant extends BranchGroup implements UniverseListener, Con
 		localRotate.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		localTranslate.addChild(localRotate);
 
-		ordered = new OrderedGroup();
-		for(int i = 0; i < 5; i++) {
-			Switch s = new Switch();
-			s.setCapability(Switch.ALLOW_SWITCH_WRITE);
-			s.setCapability(Switch.ALLOW_SWITCH_READ);
-			s.setCapability(Switch.ALLOW_CHILDREN_WRITE);
-			s.setCapability(Switch.ALLOW_CHILDREN_EXTEND);
-			ordered.addChild(s);
-		}
-
-		localRotate.addChild(ordered);
+		bbSwitch = new Switch();
+		bbSwitch.setWhichChild(Switch.CHILD_MASK);
+		bbSwitch.setCapability(Switch.ALLOW_SWITCH_READ);
+		bbSwitch.setCapability(Switch.ALLOW_SWITCH_WRITE);
+		bbSwitch.setCapability(Switch.ALLOW_CHILDREN_WRITE);
+		bbSwitch.setCapability(Switch.ALLOW_CHILDREN_EXTEND);
+		localRotate.addChild(bbSwitch);
 
 		// create the point list
 		points = new PointList();
 		plShape = new PointListShape(points);
-		plShape.setPickable(true);
+		plShape.setPickable(false);
 		plPanel = new PointListPanel(name, points);
 	}
 
@@ -178,51 +177,44 @@ public class ContentInstant extends BranchGroup implements UniverseListener, Con
 
 	public void display(ContentNode node) {
 		// remove everything if possible
-		for(@SuppressWarnings("rawtypes")
-		Enumeration e = ordered.getAllChildren(); e.hasMoreElements(); ) {
-			Switch s = (Switch)e.nextElement();
-			s.removeAllChildren();
-		}
+		bbSwitch.removeAllChildren();
 
 		// create content node and add it to the switch
 		contentNode = node;
-		((Switch)ordered.getChild(CO)).addChild(contentNode);
+		bbSwitch.addChild(contentNode);
 
 		// create the bounding box and add it to the switch
 		Point3d min = new Point3d(); contentNode.getMin(min);
 		Point3d max = new Point3d(); contentNode.getMax(max);
-		BoundingBox bs = new BoundingBox(min, max);
-		bs.setPickable(false);
-		((Switch)ordered.getChild(BS)).addChild(bs);
-		BoundingBox bb = new BoundingBox(min, max, new Color3f(0, 1, 0));
+		BoundingBox bb = new BoundingBox(min, max);
 		bb.setPickable(false);
-		((Switch)ordered.getChild(BB)).addChild(bb);
+		bbSwitch.addChild(bb);
+		bb = new BoundingBox(min, max, new Color3f(0, 1, 0));
+		bb.setPickable(false);
+		bbSwitch.addChild(bb);
 
 		// create coordinate system and add it to the switch
 		float cl = (float)Math.abs(max.x - min.x) / 5f;
 		CoordinateSystem cs = new CoordinateSystem(
 						cl, new Color3f(0, 1, 0));
 		cs.setPickable(false);
-		((Switch)ordered.getChild(CS)).addChild(cs);
+		bbSwitch.addChild(cs);
 
 		// create point list and add it to the switch
-		((Switch)ordered.getChild(PL)).addChild(plShape);
+		bbSwitch.addChild(plShape);
 
 		// adjust the landmark point size properly
 		plShape.setRadius((float)min.distance(max) / 100f);
 
 		// initialize child mask of the switch
-		setSwitch(BS, selected);
-		setSwitch(CS, coordVisible);
-		setSwitch(CO, visible);
-		setSwitch(PL, showPL);
+		whichChild.set(BS, selected);
+		whichChild.set(CS, coordVisible);
+		whichChild.set(CO, visible);
+		whichChild.set(PL, showPL);
+		bbSwitch.setChildMask(whichChild);
 
 		// update type
 		this.type = CUSTOM;
-	}
-
-	private void setSwitch(int which, boolean on) {
-		((Switch)ordered.getChild(which)).setWhichChild(on ? Switch.CHILD_ALL : Switch.CHILD_NONE);
 	}
 
 	public ImagePlus exportTransformed() {
@@ -338,28 +330,34 @@ public class ContentInstant extends BranchGroup implements UniverseListener, Con
 
 	public void setVisible(boolean b) {
 		visible = b;
-		setSwitch(CO, b);
-		setSwitch(CS, b && coordVisible);
+		whichChild.set(CO, b);
+		whichChild.set(CS, b && coordVisible);
+// 		whichChild.set(BB, b && bbVisible);
 		// only if hiding, hide the point list
 		if(!b) {
 			showPointList(false);
 		}
+		bbSwitch.setChildMask(whichChild);
 	}
 
 	public void showBoundingBox(boolean b) {
 		bbVisible = b;
-		setSwitch(BB, b);
+		whichChild.set(BB, b);
+		bbSwitch.setChildMask(whichChild);
 	}
 
 
 	public void showCoordinateSystem(boolean b) {
 		coordVisible = b;
-		setSwitch(CS, b);
+		whichChild.set(CS, b);
+		bbSwitch.setChildMask(whichChild);
 	}
 
-	public void setSelected(boolean b) {
-		this.selected = b;
-		setSwitch(BS, b && UniverseSettings.showSelectionBox);
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+		boolean sb = selected && UniverseSettings.showSelectionBox;
+		whichChild.set(BS, sb);
+		bbSwitch.setChildMask(whichChild);
 	}
 
 	/* ************************************************************
@@ -375,8 +373,9 @@ public class ContentInstant extends BranchGroup implements UniverseListener, Con
 		if(plShape == null)
 			return;
 
-		setSwitch(PL, b);
+		whichChild.set(PL, b);
 		showPL = b;
+		bbSwitch.setChildMask(whichChild);
 		if(b && plDialog != null)
 			plDialog.addPointList(getName(), plPanel);
 		else if(!b && plDialog != null)
@@ -414,7 +413,6 @@ public class ContentInstant extends BranchGroup implements UniverseListener, Con
 	 * @deprecated
 	 * @param p
 	 */
-	@Deprecated
 	public void addPointListPoint(Point3d p) {
 		points.add(p.x, p.y, p.z);
 		if(plDialog != null)
@@ -426,7 +424,6 @@ public class ContentInstant extends BranchGroup implements UniverseListener, Con
 	 * @param i
 	 * @param pos
 	 */
-	@Deprecated
 	public void setListPointPos(int i, Point3d pos) {
 		points.placePoint(points.get(i), pos.x, pos.y, pos.z);
 	}
@@ -455,7 +452,6 @@ public class ContentInstant extends BranchGroup implements UniverseListener, Con
 	 * @deprecated
 	 * @param i
 	 */
-	@Deprecated
 	public void deletePointListPoint(int i) {
 		points.remove(i);
 		if(plDialog != null)
@@ -612,12 +608,9 @@ public class ContentInstant extends BranchGroup implements UniverseListener, Con
 			contentNode.colorUpdated(this.color);
 	}
 
-	private float clamp(float min, float value, float max) {
-		return Math.max(min, Math.min(value, max));
-	}
-
 	public synchronized void setTransparency(float transparency) {
-		transparency = clamp(0, transparency, 1);
+		transparency = transparency < 0 ? 0 : transparency;
+		transparency = transparency > 1 ? 1 : transparency;
 		if(Math.abs(transparency - this.transparency) < 0.01)
 			return;
 		this.transparency = transparency;
@@ -629,34 +622,25 @@ public class ContentInstant extends BranchGroup implements UniverseListener, Con
 	 * UniverseListener interface
 	 *
 	 *************************************************************/
-	@Override
 	public void transformationStarted(View view) {}
-	@Override
 	public void contentAdded(Content c) {}
-	@Override
 	public void contentRemoved(Content c) {
 		if(plDialog != null)
 			plDialog.removePointList(plPanel);
 	}
-	@Override
 	public void canvasResized() {}
-	@Override
 	public void contentSelected(Content c) {}
-	@Override
 	public void contentChanged(Content c) {}
 
-	@Override
 	public void universeClosed() {
 		if(plDialog != null)
 			plDialog.removePointList(plPanel);
 	}
 
-	@Override
 	public void transformationUpdated(View view) {
 		eyePtChanged(view);
 	}
 
-	@Override
 	public void transformationFinished(View view) {
 		eyePtChanged(view);
 	}
