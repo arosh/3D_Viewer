@@ -45,17 +45,17 @@ public class Content extends BranchGroup implements UniverseListener, ContentCon
 		this(name, 0);
 	}
 
-	public Content(String name, int tp) {
+	public Content(String name, int timepoint) {
 		this.name = name;
 		this.swapTimelapseData = false;
 		setCapability(BranchGroup.ALLOW_DETACH);
 		setCapability(BranchGroup.ENABLE_PICK_REPORTING);
 		timepointToSwitchIndex = new HashMap<Integer, Integer>();
 		contents = new TreeMap<Integer, ContentInstant>();
-		ContentInstant ci = new ContentInstant(name + "_#" + tp);
-		ci.timepoint = tp;
-		contents.put(tp, ci);
-		timepointToSwitchIndex.put(tp, 0);
+		ContentInstant ci = new ContentInstant(name + "_#" + timepoint);
+		ci.timepoint = timepoint;
+		contents.put(timepoint, ci);
+		timepointToSwitchIndex.put(timepoint, 0);
 		contentSwitch = new Switch();
 		contentSwitch.setCapability(Switch.ALLOW_SWITCH_WRITE);
 		contentSwitch.setCapability(Switch.ALLOW_CHILDREN_WRITE);

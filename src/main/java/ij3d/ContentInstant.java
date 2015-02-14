@@ -191,10 +191,10 @@ public class ContentInstant extends BranchGroup implements UniverseListener, Con
 		// create the bounding box and add it to the switch
 		Point3d min = new Point3d(); contentNode.getMin(min);
 		Point3d max = new Point3d(); contentNode.getMax(max);
-		BoundingBox bb = new BoundingBox(min, max);
-		bb.setPickable(false);
-		((Switch)ordered.getChild(BS)).addChild(bb);
-		bb = new BoundingBox(min, max, new Color3f(0, 1, 0));
+		BoundingBox bs = new BoundingBox(min, max);
+		bs.setPickable(false);
+		((Switch)ordered.getChild(BS)).addChild(bs);
+		BoundingBox bb = new BoundingBox(min, max, new Color3f(0, 1, 0));
 		bb.setPickable(false);
 		((Switch)ordered.getChild(BB)).addChild(bb);
 
@@ -339,8 +339,7 @@ public class ContentInstant extends BranchGroup implements UniverseListener, Con
 	public void setVisible(boolean b) {
 		visible = b;
 		setSwitch(CO, b);
-		setSwitch(CS, b & coordVisible);
-// 		whichChild.set(BB, b && bbVisible);
+		setSwitch(CS, b && coordVisible);
 		// only if hiding, hide the point list
 		if(!b) {
 			showPointList(false);
@@ -358,10 +357,9 @@ public class ContentInstant extends BranchGroup implements UniverseListener, Con
 		setSwitch(CS, b);
 	}
 
-	public void setSelected(boolean selected) {
-		this.selected = selected;
-		boolean sb = selected && UniverseSettings.showSelectionBox;
-		setSwitch(BS, sb);
+	public void setSelected(boolean b) {
+		this.selected = b;
+		setSwitch(BS, b && UniverseSettings.showSelectionBox);
 	}
 
 	/* ************************************************************
@@ -614,9 +612,12 @@ public class ContentInstant extends BranchGroup implements UniverseListener, Con
 			contentNode.colorUpdated(this.color);
 	}
 
+	private float clamp(float min, float value, float max) {
+		return Math.max(min, Math.min(value, max));
+	}
+
 	public synchronized void setTransparency(float transparency) {
-		transparency = transparency < 0 ? 0 : transparency;
-		transparency = transparency > 1 ? 1 : transparency;
+		transparency = clamp(0, transparency, 1);
 		if(Math.abs(transparency - this.transparency) < 0.01)
 			return;
 		this.transparency = transparency;

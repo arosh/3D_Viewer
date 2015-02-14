@@ -252,7 +252,7 @@ public class Executer {
 	}
 
 	public void importWaveFront() {
-		importFile("Select .obj file", ".obj", "wavefront .ob");
+		importFile("Select .obj file", ".obj", "wavefront .obj");
 	}
 
 	public void importSTL() {

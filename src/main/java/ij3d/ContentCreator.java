@@ -116,9 +116,9 @@ public class ContentCreator {
 		return createContent(mesh, name, 0);
 	}
 
-	public static Content createContent(CustomMesh mesh, String name, int tp) {
-		Content c = new Content(name, tp);
-		ContentInstant content = c.getInstant(tp);
+	public static Content createContent(CustomMesh mesh, String name, int timepoint) {
+		Content c = new Content(name, timepoint);
+		ContentInstant content = c.getInstant(timepoint);
 		content.color = mesh.getColor();
 		content.transparency = mesh.getTransparency();
 		content.shaded = mesh.isShaded();
