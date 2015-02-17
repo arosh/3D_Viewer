@@ -684,9 +684,9 @@ public class Executer {
 
 		if (showDefaultCheckbox)
 			gd.addCheckbox("Use default color", oldC == null);
-		gd.addSlider("Red",0,255,oldC == null ? 255 : oldC.x*255);
-		gd.addSlider("Green",0,255,oldC == null ? 0 : oldC.y*255);
-		gd.addSlider("Blue",0,255,oldC == null ? 0 : oldC.z*255);
+		gd.addSlider("Red", 0, 255, oldC == null ? 255 : oldC.x * 255);
+		gd.addSlider("Green", 0, 255, oldC == null ? 0 : oldC.y * 255);
+		gd.addSlider("Blue", 0, 255, oldC == null ? 0 : oldC.z * 255);
 
 		if (showTimepointsCheckbox)
 			gd.addCheckbox("Apply to all timepoints", true);
@@ -753,30 +753,34 @@ public class Executer {
 	public void changeColor(final Content c) {
 		if(!checkSel(c))
 			return;
-		final ContentInstant ci = c.getCurrent();
-		final Color3f oldC = ci.getColor();
+		final ContentInstant content = c.getCurrent();
+		final Color3f oldColor = content.getColor();
 		final ColorListener colorListener = new ColorListener() {
-			@Override
 			public void colorChanged(Color3f color) {
-				ci.setColor(color);
+				content.setColor(color);
 				univ.fireContentChanged(c);
 			}
 
-			@Override
 			public void ok(final GenericDialog gd) {
-				if (gd.getNextBoolean())
+				if (gd.getNextBoolean()) {
+					// checked "Use default color"
 					record(SET_COLOR, "null", "null", "null");
-				else
-					record(SET_COLOR, "" + (int)gd.getNextNumber(),
-						"" + (int)gd.getNextNumber(), "" + (int)gd.getNextNumber());
+				}
+				else {
+					int red = (int)gd.getNextNumber();
+					int green = (int)gd.getNextNumber();
+					int blue = (int)gd.getNextNumber();
+
+					record(SET_COLOR, Integer.toString(red), Integer.toString(green), Integer.toString(blue));
+				}
 
 				// gd.wasOKed: apply to all time points
 				if (gd.getNextBoolean())
-					c.setColor(ci.getColor());
+					c.setColor(content.getColor());
 				univ.fireContentChanged(c);
 			}
 		};
-		showColorDialog("Change color...", oldC, colorListener, true, true);
+		showColorDialog("Change color...", oldColor, colorListener, true, true);
 	}
 
 	/** Adjust the background color in place. */

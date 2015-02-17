@@ -26,7 +26,6 @@ public class ImageJ3DViewer implements PlugIn {
 		  IJ.runPlugIn("ij3d.ImageJ3DViewer", "");
 	}
 
-	@Override
 	public void run(String arg) {
 		ImagePlus image = WindowManager.getCurrentImage();
 		try {
@@ -42,20 +41,14 @@ public class ImageJ3DViewer implements PlugIn {
 
 		} catch(Exception e) {
 			StringBuilder buf = new StringBuilder();
-			StackTraceElement[] st = e.getStackTrace();
-			buf.append("An unexpected exception occurred. \n" +
-				"Please mail me the following lines if you \n"+
-				"need help.\n" +
-				"bene.schmid@gmail.com\n   \n");
-			buf.append(e.getClass().getName()  + ":" +
-						e.getMessage() + "\n");
-			for(int i = 0; i < st.length; i++) {
+			buf.append("An unexpected exception occurred. \n");
+			buf.append("Please mail me the following lines if you \n");
+			buf.append("need help.\n");
+			buf.append("bene.schmid@gmail.com\n   \n");
+			buf.append(String.format("%s:%s\n", e.getClass().getName(), e.getMessage()));
+			for (StackTraceElement elem : e.getStackTrace()) {
 				buf.append(
-					"    at " + st[i].getClassName() +
-					"." + st[i].getMethodName() +
-					"(" + st[i].getFileName() +
-					":" + st[i].getLineNumber() +
-					")\n");
+						String.format("    at %s.%s(%s:%d)\n", elem.getClassName(), elem.getMethodName(), elem.getFileName(), elem.getLineNumber()));
 			}
 			new ij.text.TextWindow("Error", buf.toString(), 500, 400);
 		}
@@ -115,8 +108,9 @@ public class ImageJ3DViewer implements PlugIn {
 
 	public static void select(String name) {
 		Image3DUniverse univ = getUniv();
-		if(univ != null) univ.select(
-			univ.getContent(name));
+		if(univ != null) {
+			univ.select(univ.getContent(name));
+		}
 	}
 
 	// Contents menu
@@ -128,14 +122,15 @@ public class ImageJ3DViewer implements PlugIn {
 		ImagePlus grey = WindowManager.getImage(image);
 		Color3f color = ColorTable.getColor(c);
 
-		int factor = getInt(resamplingF);
-		int thresh = getInt(th);
-		boolean[] channels = new boolean[]{getBoolean(r),
-						getBoolean(g),
-						getBoolean(b)};
-		int ty = getInt(type);
+		int factor = Integer.parseInt(resamplingF);
+		int thresh = Integer.parseInt(th);
+		boolean[] channels = new boolean[]{
+				Boolean.valueOf(r),
+				Boolean.valueOf(g),
+				Boolean.valueOf(b)};
+		int ty = Integer.parseInt(type);
 		univ.addContent(grey, color,
-			name, thresh, channels, factor, ty);
+				name, thresh, channels, factor, ty);
 	}
 
 	public static void addVolume(String image, String c, String name,
@@ -145,10 +140,11 @@ public class ImageJ3DViewer implements PlugIn {
 		ImagePlus grey = WindowManager.getImage(image);
 		Color3f color = ColorTable.getColor(c);
 
-		int factor = getInt(resamplingF);
-		boolean[] channels = new boolean[]{getBoolean(r),
-						getBoolean(g),
-						getBoolean(b)};
+		int factor = Integer.parseInt(resamplingF);
+		boolean[] channels = new boolean[]{
+				Boolean.valueOf(r),
+				Boolean.valueOf(g),
+				Boolean.valueOf(b)};
 		univ.addVoltex(grey, color, name, 0, channels, factor);
 	}
 
@@ -159,10 +155,11 @@ public class ImageJ3DViewer implements PlugIn {
 		ImagePlus grey = WindowManager.getImage(image);
 		Color3f color = ColorTable.getColor(c);
 
-		int factor = getInt(resamplingF);
-		boolean[] channels = new boolean[]{getBoolean(r),
-						getBoolean(g),
-						getBoolean(b)};
+		int factor = Integer.parseInt(resamplingF);
+		boolean[] channels = new boolean[]{
+				Boolean.valueOf(r),
+				Boolean.valueOf(g),
+				Boolean.valueOf(b)};
 		univ.addOrthoslice(grey, color, name, 0, channels, factor);
 	}
 
@@ -192,9 +189,9 @@ public class ImageJ3DViewer implements PlugIn {
 
 			OrthoGroup vg = (OrthoGroup)univ.
 						getSelected().getContent();
-			vg.setSlice(VolumeRenderer.X_AXIS, getInt(x));
-			vg.setSlice(VolumeRenderer.Y_AXIS, getInt(y));
-			vg.setSlice(VolumeRenderer.Z_AXIS, getInt(z));
+			vg.setSlice(VolumeRenderer.X_AXIS, Integer.parseInt(x));
+			vg.setSlice(VolumeRenderer.Y_AXIS, Integer.parseInt(y));
+			vg.setSlice(VolumeRenderer.Z_AXIS, Integer.parseInt(z));
 		}
 	}
 
@@ -236,17 +233,16 @@ public class ImageJ3DViewer implements PlugIn {
 
 	public static void setColor(String red, String green, String blue) {
 		Image3DUniverse univ = getUniv();
-		if(univ == null || univ.getSelected() == null)
+		if (univ == null || univ.getSelected() == null) {
 			return;
+		}
 		Content sel = univ.getSelected();
 		try {
-			float r = getInt(red) / 256f;
-			float g = getInt(green) / 256f;
-			float b = getInt(blue) / 256f;
-			if(univ != null && univ.getSelected() != null) {
-				sel.setColor(new Color3f(r, g, b));
-			}
-		} catch(NumberFormatException e) {
+			float r = Integer.parseInt(red) / 255f;
+			float g = Integer.parseInt(green) / 255f;
+			float b = Integer.parseInt(blue) / 255f;
+			sel.setColor(new Color3f(r, g, b));
+		} catch (NumberFormatException e) {
 			sel.setColor(null);
 		}
 	}
@@ -263,14 +259,14 @@ public class ImageJ3DViewer implements PlugIn {
 		Image3DUniverse univ = getUniv();
 		if(univ != null && univ.getSelected() != null) {
 			univ.getSelected().showCoordinateSystem(
-				getBoolean(s));
+					Boolean.valueOf(s));
 		}
 	}
 
 	public static void setThreshold(String s) {
 		Image3DUniverse univ = getUniv();
 		if(univ != null && univ.getSelected() != null) {
-			univ.getSelected().setThreshold(getInt(s));
+			univ.getSelected().setThreshold(Integer.parseInt(s));
 		}
 	}
 
@@ -351,13 +347,5 @@ public class ImageJ3DViewer implements PlugIn {
 				IJ.handleException(e);
 			}
 		}
-	}
-
-	private static int getInt(String s) {
-		return Integer.parseInt(s);
-	}
-
-	private static boolean getBoolean(String s) {
-		return Boolean.valueOf(s);
 	}
 }
