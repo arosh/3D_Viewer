@@ -15,6 +15,19 @@
 	<name>plugins/3D_Viewer.jar</name>
 	<description />
 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <compilerArgument>-Xlint:deprecation</compilerArgument>
+          <compilerArgument>-Xlint:unchecked</compilerArgument>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
 	<scm>
 		<connection>scm:git:git://github.com/fiji/3D_Viewer</connection>
 		<developerConnection>scm:git:git@github.com:fiji/3D_Viewer</developerConnection>
