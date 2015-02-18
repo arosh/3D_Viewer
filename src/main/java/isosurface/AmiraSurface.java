@@ -11,7 +11,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -64,11 +63,11 @@ public class AmiraSurface implements PlugIn {
 		while ((line = input.readLine()) != null &&
 				!line.trim().startsWith("Patches"));
 
-		Map meshes = new HashMap();
+		Map<String, List<Point3f>> meshes = new HashMap<String, List<Point3f>>();
 
 		int patchCount = Integer.parseInt(line.substring(8));
 		for (int p = 0; p < patchCount; p++) {
-			List mesh = null, opposite = null;
+			List<Point3f> mesh = null, opposite = null;
 			while ((line = input.readLine()) != null &&
 					!line.trim().startsWith("Triangles"))
 				if (line.startsWith("InnerRegion"))
@@ -80,7 +79,7 @@ public class AmiraSurface implements PlugIn {
 
 			if (mesh == null) {
 				IJ.error("Funny mesh encountered");
-				mesh = new ArrayList();
+				mesh = new ArrayList<Point3f>();
 			}
 
 			int triangleCount = Integer.parseInt(
@@ -101,25 +100,29 @@ public class AmiraSurface implements PlugIn {
 		}
 
 		Color3f lightGray = new Color3f(.5f, .5f, .5f);
-		for (Object o : meshes.keySet()) {
-			String name = (String) o;
+
+		for (Map.Entry<String, List<Point3f>> entry : meshes.entrySet()) {
+			String name = entry.getKey();
+			List<Point3f> list = entry.getValue();
+
 			int m = params.getMaterialID(name);
 			double[] c = params.getMaterialColor(m);
 			Color3f color = (c[0] == 0 && c[1] == 0 && c[2] == 0) ?
 					lightGray : new Color3f((float)c[0], (float)c[1], (float)c[2]);
-			List list = (List)meshes.get(name);
+
 			if (list.size() == 0)
 				continue;
-			universe.addMesh(list, color, name, 0);
+
+			universe.addTriangleMesh(list, color, name);
 		}
 	}
 
-	private static List getMesh(Map map, String name) {
+	private static List<Point3f> getMesh(Map<String, List<Point3f>> map, String name) {
 		if (name.equals("Exterior"))
 			return null;
 		if (!map.containsKey(name))
-			map.put(name, new ArrayList());
-		return (List)map.get(name);
+			map.put(name, new ArrayList<Point3f>());
+		return map.get(name);
 	}
 }
 
