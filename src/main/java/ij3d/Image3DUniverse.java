@@ -1353,7 +1353,7 @@ public class Image3DUniverse extends DefaultAnimatableUniverse {
 	 * contents of this universe.
 	 * @return
 	 */
-	public Collection getContents() {
+	public Collection<Content> getContents() {
 		if(contents == null)
 			return null;
 		return contents.values();
