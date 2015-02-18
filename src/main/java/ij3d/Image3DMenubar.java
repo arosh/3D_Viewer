@@ -676,7 +676,6 @@ public class Image3DMenubar extends JMenuBar implements ActionListener,
 		}
 	}
 
-	@Override
 	public void itemStateChanged(ItemEvent e) {
 		Object src = e.getSource();
 		Content c = getSelected();
@@ -710,24 +709,17 @@ public class Image3DMenubar extends JMenuBar implements ActionListener,
 		return null;
 	}
 
-
-
-
-
-
-
 	// Universe Listener interface
-	@Override
 	public void transformationStarted(View view) {}
-	@Override
+
 	public void transformationFinished(View view) {}
-	@Override
+
 	public void canvasResized() {}
-	@Override
+
 	public void transformationUpdated(View view) {}
-	@Override
+
 	public void contentChanged(Content c) {}
-	@Override
+
 	public void universeClosed() {}
 
 	@Override
@@ -749,7 +741,6 @@ public class Image3DMenubar extends JMenuBar implements ActionListener,
 		selectMenu.add(item);
 	}
 
-	@Override
 	public void contentRemoved(Content c) {
 		updateMenus();
 		if(c == null)
@@ -763,8 +754,6 @@ public class Image3DMenubar extends JMenuBar implements ActionListener,
 		}
 	}
 
-
-	@Override
 	public void contentSelected(Content c) {
 		updateMenus();
 	}

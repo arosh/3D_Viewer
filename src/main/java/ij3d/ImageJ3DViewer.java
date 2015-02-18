@@ -114,13 +114,14 @@ public class ImageJ3DViewer implements PlugIn {
 	}
 
 	// Contents menu
-	public static void add(String image, String c, String name,
+	public static void add(String image, String colorName, String name,
 		String th, String r, String g, String b,
 		String resamplingF, String type) {
 
 		Image3DUniverse univ = getUniv();
 		ImagePlus grey = WindowManager.getImage(image);
-		Color3f color = ColorTable.getColor(c);
+		if (grey == null) throw new NullPointerException("grey");
+		Color3f color = ColorTable.getColor(colorName);
 
 		int factor = Integer.parseInt(resamplingF);
 		int thresh = Integer.parseInt(th);

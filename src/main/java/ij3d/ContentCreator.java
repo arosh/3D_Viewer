@@ -152,10 +152,14 @@ public class ContentCreator {
 	 * @return
 	 */
 	public static ImagePlus[] getImages(ImagePlus imp) {
+		if (imp == null) {
+			throw new NullPointerException("imp");
+		}
 		ImagePlus[] ret = new ImagePlus[imp.getNFrames()];
 		int i = 0;
-		for(ImagePlus frame : HyperStackIterator.getIterable(imp))
+		for(ImagePlus frame : HyperStackIterator.getIterable(imp)) {
 			ret[i++] = frame;
+		}
 		return ret;
 	}
 
@@ -165,7 +169,7 @@ public class ContentCreator {
 	 * If <code>file</code> however is a directory, all the files in it are sorted
 	 * alphabetically and then loaded, failing silently if an image
 	 * can not be opened by IJ.openImage().
-	 * @param dir
+	 * @param file
 	 * @return
 	 */
 	public static ImagePlus[] getImages(File file) {
