@@ -18,7 +18,7 @@ import vib.NaiveResampler;
 
 public class MCTriangulator implements Triangulator {
 
-	public List getTriangles(ImagePlus image, int threshold, 
+	public List<Point3f> getTriangles(ImagePlus image, int threshold,
 					boolean[] channels, int resamplingF) {
 
 		if(resamplingF != 1)
@@ -32,7 +32,7 @@ public class MCTriangulator implements Triangulator {
 		volume.setAverage(true);
 
 		// get triangles
-		List l = MCCube.getTriangles(volume, threshold);
+		List<Point3f> l = MCCube.getTriangles(volume, threshold);
 		return l;
 	}
 

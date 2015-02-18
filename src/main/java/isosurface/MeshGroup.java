@@ -31,9 +31,11 @@ public class MeshGroup extends ContentNode {
 		super();
 		this.c = c;
 		Color3f color = c.getColor();
-		List tri = triangulator.getTriangles(c.getImage(),
-			c.getThreshold(), c.getChannels(),
-			c.getResamplingFactor());
+		List<Point3f> tri = triangulator.getTriangles(
+				c.getImage(),
+				c.getThreshold(),
+				c.getChannels(),
+				c.getResamplingFactor());
 		if(color == null) {
 			int value = c.getImage().getProcessor().
 				getColorModel().getRGB(c.getThreshold());
@@ -70,8 +72,10 @@ public class MeshGroup extends ContentNode {
 				"image. Can't change threshold");
 			return;
 		}
-		List tri = triangulator.getTriangles(c.getImage(),
-				c.getThreshold(), c.getChannels(),
+		List<Point3f> tri = triangulator.getTriangles(
+				c.getImage(),
+				c.getThreshold(),
+				c.getChannels(),
 				c.getResamplingFactor());
 		mesh.setMesh(tri);
 	}
@@ -86,9 +90,11 @@ public class MeshGroup extends ContentNode {
 				"image. Can't change channels");
 			return;
 		}
-		List tri = triangulator.getTriangles(c.getImage(),
-			c.getThreshold(), c.getChannels(),
-			c.getResamplingFactor());
+		List<Point3f> tri = triangulator.getTriangles(
+				c.getImage(),
+				c.getThreshold(),
+				c.getChannels(),
+				c.getResamplingFactor());
 		mesh.setMesh(tri);
 	}
 

@@ -14,7 +14,8 @@ import java.awt.TextField;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
-import java.util.Vector;
+import java.util.List;
+import java.util.ArrayList;
 
 import javax.vecmath.Color3f;
 
@@ -39,7 +40,7 @@ public class ContentCreatorDialog {
 
 		// setup default values
 		int img_count = WindowManager.getImageCount();
-		Vector windows = new Vector();
+		List<String> windows = new ArrayList<String>();
 		if(file != null) {
 			windows.add(file.getAbsolutePath());
 		} else {

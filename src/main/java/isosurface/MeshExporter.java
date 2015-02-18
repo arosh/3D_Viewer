@@ -1,35 +1,21 @@
 /** Albert Cardona and Bene Schmid 20070614 at Janelia Farms*/
 package isosurface;
 
-import customnode.CustomMesh;
-import customnode.CustomMeshNode;
-import customnode.CustomMultiMesh;
-import customnode.CustomQuadMesh;
-import customnode.CustomTriangleMesh;
-import customnode.WavefrontExporter;
+import customnode.*;
 import ij.IJ;
 import ij3d.Content;
 import ij3d.ContentNode;
 import ij3d.Executer;
-
-import java.io.BufferedOutputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import orthoslice.OrthoGroup;
+import surfaceplot.SurfacePlotGroup;
+import voltex.VoltexGroup;
 
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3f;
+import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.*;
 
 
 public class MeshExporter {
@@ -38,14 +24,13 @@ public class MeshExporter {
 
 	private MeshExporter() {}
 
-	static private Collection<Content> filterMeshes(final Collection contents) {
+	static private Collection<Content> filterMeshes(final Collection<Content> contents) {
 		ArrayList<Content> meshes = new ArrayList<Content>();
-		for (Iterator it = contents.iterator(); it.hasNext(); ) {
-			Content c = (Content)it.next();
+		for (Content c : contents) {
 			ContentNode node = c.getContent();
-			if (node instanceof voltex.VoltexGroup
-			 || node instanceof orthoslice.OrthoGroup
-			 || node instanceof surfaceplot.SurfacePlotGroup) {
+			if (node instanceof VoltexGroup
+					|| node instanceof OrthoGroup
+					|| node instanceof SurfacePlotGroup) {
 				continue;
 			}
 			meshes.add(c);
@@ -54,9 +39,9 @@ public class MeshExporter {
 	}
 
 	/**
-	 * @Deprecated
+	 * @deprecated
 	 */
-	static public void saveAsWaveFront(Collection contents_) {
+	static public void saveAsWaveFront(Collection<Content> contents_) {
 		File obj_file = Executer.promptForFile("Save WaveFront", "untitled", ".obj");
 		if(obj_file == null)
 			return;
@@ -65,7 +50,7 @@ public class MeshExporter {
 
 
 	/** Accepts a collection of MeshGroup objects. */
-	static public void saveAsWaveFront(Collection contents_, File obj_file) {
+	static public void saveAsWaveFront(Collection<Content> contents_, File obj_file) {
 		if (null == contents_ || 0 == contents_.size())
 			return;
 		Collection<Content> contents = filterMeshes(contents_);
@@ -98,16 +83,16 @@ public class MeshExporter {
 	}
 
 	/**
-	 * @Deprecated
+	 * @deprecated
 	 */
-	static public void saveAsDXF(Collection contents_) {
+	static public void saveAsDXF(Collection<Content> contents_) {
 		File dxf_file = Executer.promptForFile("Save as DXF", "untitled", ".dxf");
 		if(dxf_file == null)
 			return;
 		saveAsDXF(contents_, dxf_file);
 	}
 
-	static public void saveAsDXF(Collection meshgroups, File dxf_file) {
+	static public void saveAsDXF(Collection<Content> meshgroups, File dxf_file) {
 		if (null == meshgroups || 0 == meshgroups.size()) return;
 		meshgroups = filterMeshes(meshgroups);
 		if (0 == meshgroups.size()) {
@@ -127,23 +112,21 @@ public class MeshExporter {
 		}
 	}
 
-	static public void writeDXF(final Collection contents, final Writer w) throws IOException {
+	static public void writeDXF(final Collection<Content> contents, final Writer w) throws IOException {
 		w.write("0\nSECTION\n2\nENTITIES\n");   //header of file
-		for (Iterator it = contents.iterator(); it.hasNext(); ) {
-			Content ob = (Content)it.next();
-
-			CustomMesh cmesh=null;
+		for (Content ob : contents) {
+			CustomMesh cmesh = null;
 
 			if (ob.getContent() instanceof CustomMeshNode) {
 				CustomMeshNode cmeshnode = (CustomMeshNode) ob.getContent();
 				cmesh = cmeshnode.getMesh();
 			} else if (ob.getContent() instanceof MeshGroup) {
-				MeshGroup mg = (MeshGroup)ob.getContent();
+				MeshGroup mg = (MeshGroup) ob.getContent();
 				cmesh = mg.getMesh();
 			} else
 				continue;
 
-			final List triangles = cmesh.getMesh();
+			final List<Point3f> triangles = cmesh.getMesh();
 
 			String title = ob.getName().replaceAll(" ", "_").replaceAll("#", "--");
 			Mtl mat = new Mtl(1 - ob.getTransparency(), cmesh.getColor());
@@ -153,9 +136,9 @@ public class MeshExporter {
 	}
 
 	/**
-	 * @Deprecated
+	 * @deprecated
 	 */
-	static public void saveAsSTL(Collection contents_, int filetype) {
+	static public void saveAsSTL(Collection<Content> contents_, int filetype) {
 		String title = "Save as STL (" +
 			((filetype == ASCII) ? "ASCII" : "binary") + ")";
 		File stl_file = Executer.promptForFile(title, "untitled", ".stl");
@@ -164,7 +147,7 @@ public class MeshExporter {
 		saveAsSTL(contents_, stl_file, filetype);
 	}
 
-	public static void saveAsSTL(Collection meshgroups, File stl_file, int filetype) {
+	public static void saveAsSTL(Collection<Content> meshgroups, File stl_file, int filetype) {
 		if (null == meshgroups || 0 == meshgroups.size())
 			return;
 		meshgroups = filterMeshes(meshgroups);
@@ -200,14 +183,12 @@ public class MeshExporter {
 		}
 	}
 
-	private static void writeBinarySTL(Collection meshgroups,
+	private static void writeBinarySTL(Collection<Content> meshgroups,
 			DataOutputStream out) {
 			
 		// get all the meshes and sort them into a hash
-		HashMap<String, CustomMesh> meshes = new HashMap<String, CustomMesh>();
-		for (Iterator<Content> it = meshgroups.iterator(); it.hasNext();) {
-			Content mob = it.next();
-
+		Map<String, CustomMesh> meshes = new HashMap<String, CustomMesh>();
+		for (Content mob : meshgroups) {
 			ContentNode node = mob.getContent();
 			// First CustomMultiMesh, which is also a CustomMeshNode:
 			if (node instanceof CustomMultiMesh) {
@@ -308,9 +289,7 @@ public class MeshExporter {
 
 			// get all the meshes and sort them into a hash
 			HashMap<String, CustomMesh> meshes = new HashMap<String, CustomMesh>();
-			for (Iterator<Content> it = meshgroups.iterator(); it.hasNext();) {
-				Content mob = it.next();
-
+			for (Content mob : meshgroups) {
 				ContentNode node = mob.getContent();
 				// First CustomMultiMesh, which is also a CustomMeshNode:
 				if (node instanceof CustomMultiMesh) {
@@ -383,7 +362,7 @@ public class MeshExporter {
 	}
 
 	@Deprecated
-	static public String createDXF(final Collection contents) {
+	static public String createDXF(final Collection<Content> contents) {
 		StringWriter sw = new StringWriter();
 		try {
 			writeDXF(contents, sw);
@@ -392,7 +371,7 @@ public class MeshExporter {
 	}
 
 	@Deprecated
-	static public void writeTrianglesDXF(final StringBuffer sb, final List triangles, final String the_group, final String the_color) {
+	static public void writeTrianglesDXF(final StringBuffer sb, final List<Point3f> triangles, final String the_group, final String the_color) {
 		try {
 			StringWriter sw = new StringWriter();
 			writeTrianglesDXF(sw, triangles, the_group, the_color);
@@ -402,7 +381,7 @@ public class MeshExporter {
 		}
 	}
 
-	static private void writeTrianglesDXF(final Writer w, final List triangles, final String the_group, final String the_color) throws IOException {
+	static private void writeTrianglesDXF(final Writer w, final List<Point3f> triangles, final String the_group, final String the_color) throws IOException {
 
 		final char L = '\n';
 		final String s10 = "10\n"; final String s11 = "11\n"; final String s12 = "12\n"; final String s13 = "13\n";
@@ -449,7 +428,7 @@ public class MeshExporter {
 	 * - the contents of the .mtl file with material data
 	 */
 	@Deprecated
-	static public String[] createWaveFront(Collection contents, String mtl_filename) {
+	static public String[] createWaveFront(Collection<Content> contents, String mtl_filename) {
 		StringWriter sw_obj = new StringWriter();
 		StringWriter sw_mtl = new StringWriter();
 		try {
@@ -461,26 +440,25 @@ public class MeshExporter {
 		return null;
 	}
 
-	static public void writeAsWaveFront(Collection contents, String mtl_filename, Writer w_obj, Writer w_mtl) throws IOException {
+	static public void writeAsWaveFront(Collection<Content> contents, String mtl_filename, Writer w_obj, Writer w_mtl) throws IOException {
 		HashMap<String, CustomMesh> meshes = new HashMap<String, CustomMesh>();
 
-		for(Iterator it = contents.iterator(); it.hasNext(); ) {
-			Content mob = (Content)it.next();
-			
+		for (Content mob : contents) {
+
 			ContentNode node = mob.getContent();
 
 			// First CustomMultiMesh, which is also a CustomMeshNode:
 			if (node instanceof CustomMultiMesh) {
-				CustomMultiMesh multi = (CustomMultiMesh)node;
-				for (int i=0; i<multi.size(); i++) {
-					meshes.put(mob.getName() + " [" + (i+1) + "]", multi.getMesh(i));
+				CustomMultiMesh multi = (CustomMultiMesh) node;
+				for (int i = 0; i < multi.size(); i++) {
+					meshes.put(mob.getName() + " [" + (i + 1) + "]", multi.getMesh(i));
 				}
-			// Then CustomMeshNode (all custom meshes):
+				// Then CustomMeshNode (all custom meshes):
 			} else if (node instanceof CustomMeshNode) {
-				meshes.put(mob.getName(), ((CustomMeshNode)node).getMesh());
-			// An image volume rendered as isosurface:
+				meshes.put(mob.getName(), ((CustomMeshNode) node).getMesh());
+				// An image volume rendered as isosurface:
 			} else if (node instanceof MeshGroup) {
-				meshes.put(mob.getName(), ((MeshGroup)node).getMesh());
+				meshes.put(mob.getName(), ((MeshGroup) node).getMesh());
 			} else {
 				IJ.log("Ignoring " + mob.getName() + " with node of class " + node.getClass());
 			}

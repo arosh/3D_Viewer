@@ -1292,7 +1292,7 @@ public class Image3DUniverse extends DefaultAnimatableUniverse {
 	 * Use addTriangleMesh instead.
 	 */
 	@Deprecated
-	public Content addMesh(List mesh, Color3f color, String name,
+	public Content addMesh(List<Point3f> mesh, Color3f color, String name,
 			    float scale, int threshold) {
 		  Content c = addMesh(mesh, color, name, threshold);
 		  return c;

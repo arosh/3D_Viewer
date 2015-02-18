@@ -40,6 +40,7 @@ import ij3d.Image3DUniverse;
 
 import java.awt.image.IndexColorModel;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.vecmath.Color3f;
 
@@ -129,7 +130,7 @@ public class Show_Colour_Surfaces implements PlugIn {
 			IJ.error("The background colour must have an index from 0 to "+(colours-1)+" inclusive");
 			return;
 		}
-		HashMap<Integer,Boolean> coloursUsedInImage = new HashMap();
+		Map<Integer, Boolean> coloursUsedInImage = new HashMap<Integer, Boolean>();
 		for( int c = 0; c < colours; ++c ) {
 			coloursUsedInImage.put( c, false );
 		}

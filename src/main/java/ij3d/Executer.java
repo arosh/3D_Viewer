@@ -613,7 +613,7 @@ public class Executer {
 
 	public void smoothAllMeshes() {
 		// process each Mesh in a separate thread
-		final Collection all = univ.getContents();
+		final Collection<Content> all = univ.getContents();
 		final Content[] c = new Content[all.size()];
 		all.toArray(c);
 		final AtomicInteger ai = new AtomicInteger(0);
@@ -1630,16 +1630,14 @@ public class Executer {
 			"Key\tValue", "", 512, 512);
 		Map props = Image3DUniverse.getProperties();
 		tw.append("Java 3D properties\n \n");
-		for(Iterator it = props.entrySet().iterator();
-						it.hasNext();) {
-			Map.Entry me = (Map.Entry)it.next();
+		for (Object o : props.entrySet()) {
+			Map.Entry me = (Map.Entry) o;
 			tw.append(me.getKey() + "\t" + me.getValue());
 		}
 		props = univ.getCanvas().queryProperties();
 		tw.append(" \nRendering properties\n \n");
-		for(Iterator it = props.entrySet().iterator();
-						it.hasNext();) {
-			Map.Entry me = (Map.Entry)it.next();
+		for (Object o : props.entrySet()) {
+			Map.Entry me = (Map.Entry) o;
 			tw.append(me.getKey() + "\t" + me.getValue());
 		}
 	}
@@ -1693,8 +1691,8 @@ public class Executer {
 
 	private String affine2string(float[] matrix) {
 		String transform = "";
-		for(int i = 0; i < matrix.length; i++) {
-			transform += matrix[i] + " ";
+		for (float m : matrix) {
+			transform += m + " ";
 		}
 		return transform;
 	}
@@ -1708,19 +1706,19 @@ public class Executer {
 		return m;
 	}
 
-	private static final int getAutoThreshold(ImagePlus imp) {
+	private static int getAutoThreshold(ImagePlus imp) {
 		int[] histo = new int[256];
 		int d = imp.getStackSize();
 		for(int z = 0; z < d; z++) {
 			byte[] p = (byte[])imp.getStack().getPixels(z+1);
-			for(int i = 0; i < p.length; i++) {
-				histo[(p[i]&0xff)]++;
+			for (byte q : p) {
+				histo[(q & 0xff)]++;
 			}
 		}
 		return imp.getProcessor().getAutoThreshold(histo);
 	}
 
-	private final boolean checkSel(Content c) {
+	private boolean checkSel(Content c) {
 		if(c == null) {
 			IJ.error("Selection required");
 			return false;
@@ -1735,8 +1733,9 @@ public class Executer {
 	 * *********************************************************/
 	public static void record(String command, String... args) {
 		command = "call(\"ij3d.ImageJ3DViewer." + command;
-		for(int i = 0; i < args.length; i++)
-			command += "\", \"" + args[i];
+		for (String arg : args) {
+			command += "\", \"" + arg;
+		}
 		command += "\");\n";
 		if(Recorder.record)
 			Recorder.recordString(command);

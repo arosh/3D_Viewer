@@ -2,6 +2,7 @@ package isosurface;
 
 import ij.ImagePlus;
 
+import javax.vecmath.Point3f;
 import java.util.List;
 
 public interface Triangulator {
@@ -14,6 +15,6 @@ public interface Triangulator {
 	 *                 of red, green and blue to use for the Triangulation.
 	 * @param resamplingF resampling factor
 	 */
-	public List getTriangles(ImagePlus image, int threshold, 
+	public List<Point3f> getTriangles(ImagePlus image, int threshold,
 						boolean[] channels, int resamplingF);
 }
