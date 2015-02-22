@@ -357,7 +357,7 @@ public class InteractiveBehavior extends Behavior {
 			if(univ.ui.isPointTool()) {
 				Content sel = c;
 				if(sel == null && ((Image3DUniverse)univ).getContents().size() == 1)
-					sel = (Content)univ.contents().next();
+					sel = univ.contents().next();
 				if(sel != null) {
 					sel.showPointList(true);
 					e.consume();

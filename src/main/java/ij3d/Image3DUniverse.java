@@ -624,14 +624,14 @@ public class Image3DUniverse extends DefaultAnimatableUniverse {
 		Point3d min = new Point3d();
 		Point3d max = new Point3d();
 
-		Iterator it = contents();
-		Content c = (Content)it.next();
+		Iterator<Content> it = contents();
+		Content c = it.next();
 		c.getMin(min);
 		c.getMax(max);
 		globalMin.set(min);
 		globalMax.set(max);
 		while(it.hasNext()) {
-			c = (Content)it.next();
+			c = it.next();
 			c.getMin(min);
 			c.getMax(max);
 			if(min.x < globalMin.x) globalMin.x = min.x;
@@ -1344,7 +1344,7 @@ public class Image3DUniverse extends DefaultAnimatableUniverse {
 	 * universe.
 	 */
 	@Override
-	public Iterator contents() {
+	public Iterator<Content> contents() {
 		return contents.values().iterator();
 	}
 

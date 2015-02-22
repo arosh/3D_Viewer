@@ -15,36 +15,27 @@ import ij.io.OpenDialog;
 import ij.io.SaveDialog;
 import ij.plugin.frame.Recorder;
 import ij.text.TextWindow;
-import ij3d.gui.ContentCreatorDialog;
-import ij3d.gui.InteractiveMeshDecimation;
-import ij3d.gui.InteractiveTransformDialog;
-import ij3d.gui.LUTDialog;
-import ij3d.gui.PrimitiveDialogs;
+import ij3d.gui.*;
 import ij3d.shapes.Scalebar;
 import ij3d.shortcuts.ShortCutDialog;
 import isosurface.MeshEditor;
 import isosurface.MeshExporter;
 import isosurface.MeshGroup;
 import isosurface.SmoothControl;
+import math3d.TransformIO;
+import orthoslice.MultiOrthoGroup;
+import orthoslice.OrthoGroup;
+import vib.FastMatrix;
+import voltex.VoltexGroup;
+import voltex.VolumeRenderer;
 
-import java.awt.Button;
-import java.awt.Checkbox;
-import java.awt.Cursor;
-import java.awt.FlowLayout;
-import java.awt.Label;
-import java.awt.Panel;
-import java.awt.Scrollbar;
-import java.awt.TextField;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.TextEvent;
-import java.awt.event.TextListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import javax.media.j3d.Background;
+import javax.media.j3d.PointLight;
+import javax.media.j3d.Transform3D;
+import javax.swing.*;
+import javax.vecmath.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
@@ -52,25 +43,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import javax.media.j3d.Background;
-import javax.media.j3d.PointLight;
-import javax.media.j3d.Transform3D;
-import javax.swing.JFileChooser;
-import javax.vecmath.Color3f;
-import javax.vecmath.Matrix4d;
-import javax.vecmath.Matrix4f;
-import javax.vecmath.Point3d;
-import javax.vecmath.Point3f;
-import javax.vecmath.Vector3f;
-
-import math3d.TransformIO;
-import orthoslice.MultiOrthoGroup;
-import orthoslice.OrthoGroup;
-import vib.FastMatrix;
-import voltex.VoltexGroup;
-import voltex.VolumeRenderer;
 
 public class Executer {
 
@@ -239,7 +213,7 @@ public class Executer {
 		}
 		String path = od.getDirectory() + filename;
 		IJ.log("path: " + path);
-		Object ob;
+		Collection<Future<Content>> ob;
 		try {
 			ob = univ.addContentLater(path);
 			record(IMPORT, path);
@@ -1133,8 +1107,9 @@ public class Executer {
 	}
 
 	public void showAllCoordinateSystems(boolean b) {
-		for (Iterator it = univ.contents(); it.hasNext(); )
-			((Content)it.next()).showCoordinateSystem(b);
+		for (Iterator<Content> it = univ.contents(); it.hasNext(); ) {
+			it.next().showCoordinateSystem(b);
+		}
 	}
 
 
@@ -1201,7 +1176,7 @@ public class Executer {
 
 	public void register() {
 		// Select the contents used for registration
-		Collection contents = univ.getContents();
+		Collection<Content> contents = univ.getContents();
 		if(contents.size() < 2) {
 			IJ.error("At least two bodies are " +
 				"required for registration");

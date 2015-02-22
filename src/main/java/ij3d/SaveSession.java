@@ -63,8 +63,8 @@ public class SaveSession {
 		}
 		PrintWriter out = new PrintWriter(new FileWriter(path));
 		sase.saveView(out, univ);
-		for(Object c : univ.getContents())
-			sase.saveContent(out, (Content)c);
+		for(Content c : univ.getContents())
+			sase.saveContent(out, c);
 		out.close();
 	}
 

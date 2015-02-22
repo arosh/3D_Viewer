@@ -81,8 +81,8 @@ public class U3DExporter {
 
 		List<Mesh> meshes = new ArrayList<Mesh>();
 
-		for(Object content : univ.getContents()) {
-			ContentNode cn = ((Content)content).getContent();
+		for(Content content : univ.getContents()) {
+			ContentNode cn = content.getContent();
 			CustomTriangleMesh ctm = null;
 			if(cn instanceof CustomMeshNode) {
 				ctm = (CustomTriangleMesh)((CustomMeshNode)cn).getMesh();
@@ -92,7 +92,7 @@ public class U3DExporter {
 			}
 
 			if(ctm != null) {
-				Content c = (Content)content;
+				Content c = content;
 				Mesh m = new Mesh(ctm, c.getName(), c.getColor(), c.getTransparency());
 				m.getMinMax(min, max);
 				meshes.add(m);

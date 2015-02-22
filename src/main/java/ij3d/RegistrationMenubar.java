@@ -98,8 +98,8 @@ public class RegistrationMenubar extends JMenuBar implements ActionListener,
 	}
 
 	private void hideAll() {
-		for(Iterator it = univ.contents(); it.hasNext();)
-			((Content)it.next()).setVisible(false);
+		for(Iterator<Content> it = univ.contents(); it.hasNext();)
+			it.next().setVisible(false);
 	}
 
 

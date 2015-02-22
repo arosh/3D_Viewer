@@ -185,7 +185,7 @@ public abstract class DefaultUniverse extends SimpleUniverse
 	private boolean transformed = false;
 
 	public abstract Content getSelected();
-	public abstract Iterator contents();
+	public abstract Iterator<Content> contents();
 
 	/**
 	 * Constructor.
