@@ -330,7 +330,7 @@ public class Pipe {
 	}
 
 	public static final int enrangeInteger( float value, int mininum, int maximum ) {
-		return Math.max( mininum, Math.min( maximum, (int) Math.round( value ) ) );
+		return Math.max( mininum, Math.min( maximum, Math.round( value )) );
 	}
 
 	public static final int enrangeInteger( double value, int mininum, int maximum ) {
