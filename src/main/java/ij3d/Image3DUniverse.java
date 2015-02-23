@@ -1689,8 +1689,7 @@ public class Image3DUniverse extends DefaultAnimatableUniverse {
 					if (univ.autoAdjustView) {
 						univ.getViewPlatformTransformer()
 							.centerAt(univ.globalCenter);
-						float range = (float)(univ.globalMax.x
-							- univ.globalMin.x);
+						float range = (float)(univ.globalMax.x - univ.globalMin.x);
 						univ.ensureScale(range);
 					}
 				}
@@ -1755,8 +1754,7 @@ public class Image3DUniverse extends DefaultAnimatableUniverse {
 				if (univ.autoAdjustView) {
 					univ.getViewPlatformTransformer()
 						.centerAt(univ.globalCenter);
-					float range = (float)(univ.globalMax.x
-						- univ.globalMin.x);
+					float range = (float)(univ.globalMax.x - univ.globalMin.x);
 					univ.ensureScale(range);
 				}
 				// Notify listeners

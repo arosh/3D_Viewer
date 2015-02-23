@@ -54,7 +54,6 @@ public class RegistrationMenubar extends JMenuBar implements ActionListener,
 		register.add(adjustSlices);
 
 		this.add(register);
-
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -75,7 +74,6 @@ public class RegistrationMenubar extends JMenuBar implements ActionListener,
 			doRegistration(templ, model);
 		}
 	}
-
 
 	// usually called from the main menu bar.
 	public void register() {
@@ -102,7 +100,6 @@ public class RegistrationMenubar extends JMenuBar implements ActionListener,
 			it.next().setVisible(false);
 	}
 
-
 	private void selectLandmarkSet(final Content content,
 						String actionCommand) {
 		hideAll();
@@ -112,8 +109,7 @@ public class RegistrationMenubar extends JMenuBar implements ActionListener,
 		univ.ui.setPointTool();
 		univ.select(content);
 
-		univ.setStatus("Select landmarks in " + content.getName() +
-				" and click OK");
+		univ.setStatus("Select landmarks in " + content.getName() + " and click OK");
 
 		Panel p = new Panel(new FlowLayout());
 		Button b = new Button("OK");
@@ -239,9 +235,6 @@ public class RegistrationMenubar extends JMenuBar implements ActionListener,
 		}
 	}
 
-
-
-
 	// Universe Listener interface
 	public void transformationStarted(View view) {}
 	public void transformationFinished(View view) {}
@@ -254,4 +247,3 @@ public class RegistrationMenubar extends JMenuBar implements ActionListener,
 	public void contentRemoved(Content c) {}
 	public void contentSelected(Content c) {}
 }
-

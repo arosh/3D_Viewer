@@ -47,8 +47,12 @@ public class ImageJ3DViewer implements PlugIn {
 			buf.append("bene.schmid@gmail.com\n   \n");
 			buf.append(String.format("%s:%s\n", e.getClass().getName(), e.getMessage()));
 			for (StackTraceElement elem : e.getStackTrace()) {
-				buf.append(
-						String.format("    at %s.%s(%s:%d)\n", elem.getClassName(), elem.getMethodName(), elem.getFileName(), elem.getLineNumber()));
+				buf.append(String.format(
+						"    at %s.%s(%s:%d)\n",
+						elem.getClassName(),
+						elem.getMethodName(),
+						elem.getFileName(),
+						elem.getLineNumber()));
 			}
 			new ij.text.TextWindow("Error", buf.toString(), 500, 400);
 		}
@@ -185,27 +189,25 @@ public class ImageJ3DViewer implements PlugIn {
 	// Individual content's menu
 	public static void setSlices(String x, String y, String z) {
 		Image3DUniverse univ = getUniv();
-		if(univ != null && univ.getSelected() != null &&
-			univ.getSelected().getType() == Content.ORTHO) {
+		if (univ == null || univ.getSelected() == null ||
+				univ.getSelected().getType() != Content.ORTHO) return;
 
-			OrthoGroup vg = (OrthoGroup)univ.
-						getSelected().getContent();
-			vg.setSlice(VolumeRenderer.X_AXIS, Integer.parseInt(x));
-			vg.setSlice(VolumeRenderer.Y_AXIS, Integer.parseInt(y));
-			vg.setSlice(VolumeRenderer.Z_AXIS, Integer.parseInt(z));
-		}
+		OrthoGroup vg = (OrthoGroup)univ.
+					getSelected().getContent();
+		vg.setSlice(VolumeRenderer.X_AXIS, Integer.parseInt(x));
+		vg.setSlice(VolumeRenderer.Y_AXIS, Integer.parseInt(y));
+		vg.setSlice(VolumeRenderer.Z_AXIS, Integer.parseInt(z));
 	}
 
 	public static void fillSelection() {
 		Image3DUniverse univ = getUniv();
-		if(univ != null && univ.getSelected() != null &&
-			univ.getSelected().getType() == Content.VOLUME) {
+		if (univ == null || univ.getSelected() == null ||
+				univ.getSelected().getType() != Content.VOLUME) return;
 
-			VoltexGroup vg = (VoltexGroup)univ.
-						getSelected().getContent();
-			ImageCanvas3D canvas = (ImageCanvas3D)univ.getCanvas();
-			vg.fillRoi(canvas, canvas.getRoi(), (byte)0);
-		}
+		VoltexGroup vg = (VoltexGroup)univ.
+					getSelected().getContent();
+		ImageCanvas3D canvas = (ImageCanvas3D)univ.getCanvas();
+		vg.fillRoi(canvas, canvas.getRoi(), (byte)0);
 	}
 
 	public static void lock() {
@@ -224,19 +226,16 @@ public class ImageJ3DViewer implements PlugIn {
 
 	public static void setChannels(String red, String green, String blue) {
 		Image3DUniverse univ = getUniv();
+		if (univ == null || univ.getSelected() == null) return;
 		boolean r = Boolean.valueOf(red);
 		boolean g = Boolean.valueOf(green);
 		boolean b = Boolean.valueOf(blue);
-		if(univ != null && univ.getSelected() != null) {
-			univ.getSelected().setChannels(new boolean[]{r, g, b});
-		}
+		univ.getSelected().setChannels(new boolean[]{r, g, b});
 	}
 
 	public static void setColor(String red, String green, String blue) {
 		Image3DUniverse univ = getUniv();
-		if (univ == null || univ.getSelected() == null) {
-			return;
-		}
+		if (univ == null || univ.getSelected() == null) return;
 		Content sel = univ.getSelected();
 		try {
 			float r = Integer.parseInt(red) / 255f;
@@ -304,15 +303,14 @@ public class ImageJ3DViewer implements PlugIn {
 
 	public static void setTransform(String transform) {
 		Image3DUniverse univ = getUniv();
-		if(univ != null && univ.getSelected() != null) {
-			String[] s = ij.util.Tools.split(transform);
-			float[] m = new float[s.length];
-			for(int i = 0; i < s.length; i++) {
-				m[i] = Float.parseFloat(s[i]);
-			}
-			univ.getSelected().setTransform(new Transform3D(m));
-			univ.fireTransformationUpdated();
+		if (univ == null || univ.getSelected() == null) return;
+		String[] s = ij.util.Tools.split(transform);
+		float[] m = new float[s.length];
+		for(int i = 0; i < s.length; i++) {
+			m[i] = Float.parseFloat(s[i]);
 		}
+		univ.getSelected().setTransform(new Transform3D(m));
+		univ.fireTransformationUpdated();
 	}
 
 	public static void importContent(String path) {
@@ -330,19 +328,24 @@ public class ImageJ3DViewer implements PlugIn {
 
 	public static void exportContent(String format, String path) {
 		Image3DUniverse univ = getUniv();
-		if(univ != null && univ.getSelected() != null) {
-			format = format.toLowerCase();
-			if (format.equals("dxf"))
-				MeshExporter.saveAsDXF(univ.getContents(), new File(path));
-			else if (format.equals("wavefront"))
-				MeshExporter.saveAsWaveFront(univ.getContents(), new File(path));
-			else if (format.startsWith("stl")) {
-				if (format.indexOf("ascii") > 0)
-					MeshExporter.saveAsSTL(univ.getContents(), new File(path), MeshExporter.ASCII);
-				else
-					MeshExporter.saveAsSTL(univ.getContents(), new File(path), MeshExporter.BINARY);
-			}
-			else if (format.equals("u3d")) try {
+		if (univ == null || univ.getSelected() == null) return;
+		format = format.toLowerCase();
+		File file = new File(path);
+
+		if (format.equals("dxf")) {
+			MeshExporter.saveAsDXF(univ.getContents(), file);
+		}
+		else if (format.equals("wavefront")) {
+			MeshExporter.saveAsWaveFront(univ.getContents(), file);
+		}
+		else if (format.startsWith("stl")) {
+			if (format.indexOf("ascii") > 0)
+				MeshExporter.saveAsSTL(univ.getContents(), file, MeshExporter.ASCII);
+			else
+				MeshExporter.saveAsSTL(univ.getContents(), file, MeshExporter.BINARY);
+		}
+		else if (format.equals("u3d")) {
+			try {
 				U3DExporter.export(univ, path);
 			} catch (IOException e) {
 				IJ.handleException(e);
