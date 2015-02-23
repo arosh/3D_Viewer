@@ -118,13 +118,12 @@ public class ImageJ3DViewer implements PlugIn {
 	}
 
 	// Contents menu
-	public static void add(String image, String colorName, String name,
+	public static void add(String imageName, String colorName, String name,
 		String th, String r, String g, String b,
 		String resamplingF, String type) {
 
 		Image3DUniverse univ = getUniv();
-		ImagePlus grey = WindowManager.getImage(image);
-		if (grey == null) throw new NullPointerException("grey");
+		ImagePlus[] image = ContentCreator.getImages(new File(imageName));
 		Color3f color = ColorTable.getColor(colorName);
 
 		int factor = Integer.parseInt(resamplingF);
@@ -134,8 +133,11 @@ public class ImageJ3DViewer implements PlugIn {
 				Boolean.valueOf(g),
 				Boolean.valueOf(b)};
 		int ty = Integer.parseInt(type);
-		univ.addContent(grey, color,
-				name, thresh, channels, factor, ty);
+		int timepoint = 0;
+
+		Content c = ContentCreator.createContent(name, image, ty, factor, timepoint, color, thresh, channels);
+
+		univ.addContent(c);
 	}
 
 	public static void addVolume(String image, String c, String name,
